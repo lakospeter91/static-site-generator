@@ -1,25 +1,29 @@
 import os
 import shutil
+import sys
 from generator import generate_pages_recursive
-from textnode import TextNode, TextType
 
 CONTENT = "content"
-PUBLIC = "public"
+DOCS = "docs"
 STATIC = "static"
 TEMPLATE = "template.html"
 
 def main():
+    base_path = "/"
+    if len(sys.argv) > 1:
+        base_path = sys.argv[1]
+    print(f"Base path: {base_path}")
     if os.path.exists(STATIC):
-        print(f"Copying assets from directory '{STATIC}' to directory '{PUBLIC}'")
-        if os.path.exists(PUBLIC):
-            print(f"Removing directory '{PUBLIC}'")
-            shutil.rmtree(PUBLIC)
-        print(f"Creating directory '{PUBLIC}'")
-        os.mkdir(PUBLIC)
-        copy(STATIC, PUBLIC)
+        print(f"Copying assets from directory '{STATIC}' to directory '{DOCS}'")
+        if os.path.exists(DOCS):
+            print(f"Removing directory '{DOCS}'")
+            shutil.rmtree(DOCS)
+        print(f"Creating directory '{DOCS}'")
+        os.mkdir(DOCS)
+        copy(STATIC, DOCS)
     else:
         print(f"Directory '{STATIC}' does not exist")
-    generate_pages_recursive(CONTENT, TEMPLATE, PUBLIC)
+    generate_pages_recursive(CONTENT, TEMPLATE, DOCS, base_path)
 
 def copy(dir, destination_root):
     children = os.listdir(dir)
@@ -34,6 +38,6 @@ def copy(dir, destination_root):
             if not os.path.exists(destination):
                 print(f"Creating directory '{destination}'")
                 os.mkdir(destination)
-            copy(path, PUBLIC)
+            copy(path, DOCS)
 
 main()

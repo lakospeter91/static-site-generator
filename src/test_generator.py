@@ -1,6 +1,6 @@
 import unittest
 
-from generator import extract_title, generate_pages_recursive
+from generator import extract_title
 
 
 class TestGenerator(unittest.TestCase):
